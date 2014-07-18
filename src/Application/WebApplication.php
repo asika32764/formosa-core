@@ -46,9 +46,17 @@ class WebApplication extends AbstractWebApplication
 	{
 		$this->loadConfiguration($this->config);
 
+		if ($this->config->get('system.debug'))
+		{
+			\Formosa\Error\SimpleErrorHandler::registerErrorHandler();
+		}
+
 		Factory::$app = $this;
 
 		$this->container = Factory::getContainer();
+
+		// Debug system
+		define('FORMOSA_DEBUG', $this->config->get('system.debug'));
 
 		$this->registerProviders($this->container);
 	}

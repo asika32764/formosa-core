@@ -8,9 +8,7 @@
 
 namespace Formosa\Error;
 
-use Formosa\Application\Application;
 use Formosa\Application\WebApplication;
-use Formosa\Factory;
 use Formosa\Renderer\PhpRenderer;
 
 /**

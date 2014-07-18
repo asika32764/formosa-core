@@ -9,6 +9,8 @@
 namespace Formosa\View;
 
 use Formosa\Model\DatabaseModel;
+use Formosa\Renderer\AbstractRenderer;
+use Formosa\Renderer\PhpRenderer;
 use Formosa\Utilities\Queue\Priority;
 use Joomla\Model\ModelInterface;
 use Joomla\View\AbstractHtmlView;
@@ -36,14 +38,24 @@ class HtmlView extends AbstractHtmlView
 	protected $name = null;
 
 	/**
+	 * Property renderer.
+	 *
+	 * @var  \Formosa\Renderer\AbstractRenderer
+	 */
+	protected $renderer;
+
+	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   ModelInterface    $model  The model object.
-	 * @param   \SplPriorityQueue $paths  The paths queue.
+	 * @param   ModelInterface     $model    The model object.
+	 * @param   \SplPriorityQueue  $paths    The paths queue.
+	 * @param   AbstractRenderer   $renderer The renderer engine.
 	 */
-	public function __construct(ModelInterface $model = null, \SplPriorityQueue $paths = null)
+	public function __construct(ModelInterface $model = null, \SplPriorityQueue $paths = null, AbstractRenderer $renderer = null)
 	{
 		$model = $model ? : new DatabaseModel;
+
+		$this->renderer = $renderer ? : new PhpRenderer;
 
 		parent::__construct($model, $paths);
 	}

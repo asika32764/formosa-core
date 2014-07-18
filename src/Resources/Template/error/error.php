@@ -26,6 +26,10 @@ $exception = $data->exception;
 		border-bottom: 1px solid #eee;
 	}
 
+	p.lead {
+		font-size: 1.5em;
+	}
+
 	strong {
 		display : inline-block;
 		width   : 85px;
@@ -52,15 +56,16 @@ $exception = $data->exception;
 
 <h1>Formosa Error</h1>
 
-<p>Application shut down because of following error:</p>
+<p class="lead">
+	<?php echo $exception->getMessage(); ?>
+</p>
+
+<br /><br />
 
 <h2>Error Details</h2>
 
 <div>
 	<strong>Type:</strong> <?php echo get_class($exception); ?>
-</div>
-<div>
-	<strong>Message:</strong> <?php echo $exception->getMessage(); ?>
 </div>
 <div>
 	<strong>File:</strong> <?php echo $exception->getFile(); ?>
@@ -69,7 +74,7 @@ $exception = $data->exception;
 	<strong>Line:</strong> <?php echo $exception->getLine(); ?>
 </div>
 
-<h2>BavkTrace</h2>
+<h2>BackTrace</h2>
 
 <table>
 	<?php foreach ($exception->getTrace() as $i => $trace): ?>
@@ -78,10 +83,10 @@ $exception = $data->exception;
 			#<?php echo $i ; ?>
 		</td>
 		<td>
-			<?php echo $trace['file']; ?> (<?php echo $trace['line']; ?>)
+			<?php echo $trace['class']; ?>::<?php echo $trace['function']; ?>()
 		</td>
 		<td>
-			<?php echo $trace['class']; ?>::<?php echo $trace['function']; ?>()
+			<?php echo $trace['file']; ?> (<?php echo $trace['line']; ?>)
 		</td>
 	</tr>
 	<?php endforeach; ?>
