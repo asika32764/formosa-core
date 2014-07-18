@@ -7,8 +7,10 @@ Formosa Framework is a extra bundle of Windwalker & Joomla Framework.
 Writing require dependency in `composer.json`.
 
 ``` json
-"require": {
-    "asika/formosa-core" : "1.0.*"
+{
+    "require": {
+        "asika/formosa-core" : "1.0.*"
+    }
 }
 ```
 
