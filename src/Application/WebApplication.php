@@ -21,7 +21,7 @@ use Joomla\Router\RestRouter;
  *
  * @since 1.0
  */
-class Application extends AbstractWebApplication
+class WebApplication extends AbstractWebApplication
 {
 	/**
 	 * Property router.

@@ -29,7 +29,7 @@
 			"" : "src/"
 		},
 		"files": [
-			"src/Formosa/PHP/methods.php"
+			"src/PHP/methods.php"
 		]
 	}
 }
