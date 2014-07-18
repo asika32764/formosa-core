@@ -9,7 +9,10 @@
 namespace Formosa\View;
 
 use Formosa\Model\DatabaseModel;
+use Formosa\Renderer\AbstractRenderer;
+use Formosa\Renderer\PhpRenderer;
 use Formosa\Utilities\Queue\Priority;
+use Joomla\Filesystem\Path;
 use Joomla\Model\ModelInterface;
 use Joomla\View\AbstractHtmlView;
 use Windwalker\Data\Data;
@@ -36,16 +39,28 @@ class HtmlView extends AbstractHtmlView
 	protected $name = null;
 
 	/**
+	 * Property renderer.
+	 *
+	 * @var  \Formosa\Renderer\AbstractRenderer
+	 */
+	protected $renderer;
+
+	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   ModelInterface    $model  The model object.
-	 * @param   \SplPriorityQueue $paths  The paths queue.
+	 * @param   ModelInterface     $model    The model object.
+	 * @param   \SplPriorityQueue  $paths    The paths queue.
+	 * @param   AbstractRenderer   $renderer The renderer engine.
 	 */
-	public function __construct(ModelInterface $model = null, \SplPriorityQueue $paths = null)
+	public function __construct(ModelInterface $model = null, \SplPriorityQueue $paths = null, AbstractRenderer $renderer = null)
 	{
 		$model = $model ? : new DatabaseModel;
 
+		$this->renderer = $renderer ? : new PhpRenderer;
+
 		parent::__construct($model, $paths);
+
+		$this->paths->insert(FORMOSA_TEMPLATE . '/_global', Priority::NORMAL);
 	}
 
 	/**
@@ -75,6 +90,31 @@ class HtmlView extends AbstractHtmlView
 		$this->data = $data;
 
 		return $this;
+	}
+
+	/**
+	 * render
+	 *
+	 * @return  string
+	 *
+	 * @throws \RuntimeException
+	 */
+	public function render()
+	{
+		$this->getName();
+
+		$data = $this->getData();
+
+		$this->prepareData($data);
+
+		$data->view = new Data;
+
+		$data->view->name = $this->getName();
+		$data->view->layout = $this->getLayout();
+
+		$this->renderer->setPaths($this->paths);
+
+		return $this->renderer->render($this->getLayout(), (array) $data);
 	}
 
 	/**
@@ -115,6 +155,19 @@ class HtmlView extends AbstractHtmlView
 	 */
 	protected function prepareData($data)
 	{
+	}
+
+	/**
+	 * getPath
+	 *
+	 * @param string $layout
+	 * @param string $ext
+	 *
+	 * @return  mixed
+	 */
+	public function getPath($layout, $ext = 'php')
+	{
+		return parent::getPath($layout, $ext);
 	}
 
 	/**

@@ -44,18 +44,44 @@ class WebApplication extends AbstractWebApplication
 	 */
 	protected function initialise()
 	{
+		$this->loadConfiguration($this->config);
+
+		if ($this->config->get('system.debug'))
+		{
+			\Formosa\Error\SimpleErrorHandler::registerErrorHandler();
+		}
+
 		Factory::$app = $this;
 
 		$this->container = Factory::getContainer();
 
-		$this->container->registerServiceProvider(new DatabaseProvider($this->config));
+		// Debug system
+		define('FORMOSA_DEBUG', $this->config->get('system.debug'));
 
-		define('DEBUG', $this->get('system.debug'));
+		$this->registerProviders($this->container);
+	}
 
-		if (DEBUG)
-		{
-			$this->container->registerServiceProvider(new WhoopsProvider($this->config));
-		}
+	/**
+	 * registerProviders
+	 *
+	 * @param Container $container
+	 *
+	 * @return  void
+	 */
+	protected function registerProviders(Container $container)
+	{
+		$container->registerServiceProvider(new DatabaseProvider($this->config));
+	}
+
+	/**
+	 * loadConfiguration
+	 *
+	 * @param Registry $config
+	 *
+	 * @return  void
+	 */
+	protected function loadConfiguration($config)
+	{
 	}
 
 	/**
@@ -107,16 +133,6 @@ class WebApplication extends AbstractWebApplication
 		$this->respond();
 
 		// @event onAfterRespond
-	}
-
-	/**
-	 * respond
-	 *
-	 * @return  void
-	 */
-	public function respond()
-	{
-		parent::respond();
 	}
 
 	/**
@@ -183,6 +199,35 @@ class WebApplication extends AbstractWebApplication
 		$session->getFlashBag()->add($type, $message);
 
 		return $this;
+	}
+
+	/**
+	 * output
+	 *
+	 * @return  void
+	 */
+	public function output()
+	{
+		parent::respond();
+	}
+
+	/**
+	 * toString
+	 *
+	 * @return  string
+	 */
+	public function __toString()
+	{
+		// Start an output buffer.
+		ob_start();
+
+		// Load the layout.
+		parent::respond();
+
+		// Get the layout contents.
+		$output = ob_get_clean();
+
+		return $output;
 	}
 }
  

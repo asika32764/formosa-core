@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of auth project. 
+ * Part of formosa project.
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -8,7 +8,8 @@
 
 namespace Formosa\View;
 
-use Formosa\View\Twig\FormosaExtension;
+use Formosa\Renderer\TwigRenderer;
+use Joomla\Model\ModelInterface;
 use Windwalker\Data\Data;
 
 /**
@@ -18,6 +19,17 @@ use Windwalker\Data\Data;
  */
 class TwigHtmlView extends HtmlView
 {
+	/**
+	 * Method to instantiate the view.
+	 *
+	 * @param   ModelInterface     $model  The model object.
+	 * @param   \SplPriorityQueue  $paths  The paths queue.
+	 */
+	public function __construct(ModelInterface $model = null, \SplPriorityQueue $paths = null)
+	{
+		parent::__construct($model, $paths, new TwigRenderer);
+	}
+
 	/**
 	 * render
 	 *
@@ -29,32 +41,31 @@ class TwigHtmlView extends HtmlView
 	{
 		$this->getName();
 
-		$this->prepareData($this->getData());
-
-		$loader = new \Twig_Loader_Filesystem(iterator_to_array($this->getPaths()));
-		$loader->addPath(FORMOSA_TEMPLATE . '/_global');
-
-		$config = array(
-			'debug' => DEBUG
-		);
-
-		$twig = new \Twig_Environment($loader, $config);
-
-		$twig->addExtension(new FormosaExtension);
-
-		if (DEBUG)
-		{
-			$twig->addExtension(new \Twig_Extension_Debug);
-		}
-
 		$data = $this->getData();
+
+		$this->prepareData($data);
 
 		$data->view = new Data;
 
 		$data->view->name = $this->getName();
 		$data->view->layout = $this->getLayout();
 
-		return $twig->render($this->getLayout() . '.twig', iterator_to_array($data));
+		$this->renderer->setPaths($this->paths);
+
+		return $this->renderer->render($this->getLayout() . '.twig', (array) $data);
+	}
+
+	/**
+	 * getPath
+	 *
+	 * @param string $layout
+	 * @param string $ext
+	 *
+	 * @return  mixed
+	 */
+	public function getPath($layout, $ext = 'twig')
+	{
+		return parent::getPath($layout, $ext);
 	}
 }
  
