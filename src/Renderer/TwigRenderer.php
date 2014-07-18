@@ -25,6 +25,22 @@ class TwigRenderer extends AbstractRenderer
 	protected $loader = null;
 
 	/**
+	 * Property extensions.
+	 *
+	 * @var  array
+	 */
+	protected $extensions = array();
+
+	/**
+	 * Property config.
+	 *
+	 * @var  \Joomla\Registry\Registry|array
+	 */
+	protected $config = array(
+		'debug' => FORMOSA_DEBUG
+	);
+
+	/**
 	 * render
 	 *
 	 * @param string        $file
@@ -35,13 +51,14 @@ class TwigRenderer extends AbstractRenderer
 	 */
 	public function render($file, $data = array())
 	{
-		$config = array(
-			'debug' => FORMOSA_DEBUG
-		);
-
-		$twig = new \Twig_Environment($this->getLoader(), $config);
+		$twig = new \Twig_Environment($this->getLoader(), $this->config->toArray());
 
 		$twig->addExtension(new FormosaExtension);
+
+		foreach ($this->extensions as $extension)
+		{
+			$twig->addExtension($extension);
+		}
 
 		if (FORMOSA_DEBUG)
 		{
@@ -73,5 +90,17 @@ class TwigRenderer extends AbstractRenderer
 		$this->loader = $loader;
 
 		return $this;
+	}
+
+	/**
+	 * addExtension
+	 *
+	 * @param \Twig_Extension $extension
+	 *
+	 * @return  void
+	 */
+	public function addExtension(\Twig_Extension $extension)
+	{
+		$this->extensions[] = $extension;
 	}
 }

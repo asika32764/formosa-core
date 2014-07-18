@@ -9,6 +9,7 @@
 namespace Formosa\Renderer;
 
 use Formosa\Utilities\Queue\Priority;
+use Joomla\Registry\Registry;
 
 /**
  * Class AbstractRenderer
@@ -25,13 +26,25 @@ abstract class AbstractRenderer
 	protected $paths = null;
 
 	/**
+	 * Property config.
+	 *
+	 * @var  Registry
+	 */
+	protected $config = array();
+
+	/**
 	 * Class init.
 	 *
 	 * @param array $paths
+	 * @param array $config
 	 */
-	public function __construct($paths = null)
+	public function __construct($paths = null, $config = array())
 	{
 		$this->paths = ($paths instanceof \SplPriorityQueue) ? $paths : Priority::createQueue($paths, Priority::NORMAL);
+
+		$this->config = new Registry($this->config);
+
+		$this->config->loadArray($config);
 	}
 
 	/**
