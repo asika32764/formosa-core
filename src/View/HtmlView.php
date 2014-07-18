@@ -59,6 +59,8 @@ class HtmlView extends AbstractHtmlView
 		$this->renderer = $renderer ? : new PhpRenderer;
 
 		parent::__construct($model, $paths);
+
+		$this->paths->insert(FORMOSA_TEMPLATE . '/_global', Priority::NORMAL);
 	}
 
 	/**
@@ -165,8 +167,6 @@ class HtmlView extends AbstractHtmlView
 	 */
 	public function getPath($layout, $ext = 'php')
 	{
-		$this->paths->insert(FORMOSA_TEMPLATE . '/_global', Priority::NORMAL);
-
 		return parent::getPath($layout, $ext);
 	}
 

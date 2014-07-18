@@ -70,11 +70,6 @@ abstract class AbstractRenderer
 	 */
 	public function findFile($file, $ext = '')
 	{
-		if (is_file($file))
-		{
-			return $file;
-		}
-
 		$paths = clone $this->paths;
 
 		$file = str_replace('.', '/', $file);

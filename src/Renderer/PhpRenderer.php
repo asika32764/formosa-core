@@ -8,6 +8,7 @@
 
 namespace Formosa\Renderer;
 
+use Formosa\Renderer\Helper\RendererHelper;
 use Windwalker\Data\Data;
 
 /**
@@ -17,6 +18,48 @@ use Windwalker\Data\Data;
  */
 class PhpRenderer extends AbstractRenderer
 {
+	/**
+	 * Property block.
+	 *
+	 * @var  array
+	 */
+	protected $block = array();
+
+	/**
+	 * Property blockQueue.
+	 *
+	 * @var  \SplQueue
+	 */
+	protected $blockQueue = null;
+
+	/**
+	 * Property currentBlock.
+	 *
+	 * @var  string
+	 */
+	protected $currentBlock = null;
+
+	/**
+	 * Property extends.
+	 *
+	 * @var  string
+	 */
+	protected $extend = null;
+
+	/**
+	 * Property parent.
+	 *
+	 * @var  PhpRenderer
+	 */
+	protected $parent = null;
+
+	/**
+	 * Property data.
+	 *
+	 * @var Data
+	 */
+	protected $data;
+
 	/**
 	 * render
 	 *
@@ -28,7 +71,9 @@ class PhpRenderer extends AbstractRenderer
 	 */
 	public function render($file, $data = array())
 	{
-		$data = new Data($data);
+		$this->data = $data = ($data instanceof Data) ? $data : new Data($data);
+
+		$data->bind(RendererHelper::getGlobalVariables());
 
 		$filePath = $this->findFile($file);
 
@@ -46,7 +91,22 @@ class PhpRenderer extends AbstractRenderer
 		// Get the layout contents.
 		$output = ob_get_clean();
 
-		return $output;
+		// Handler extend
+		if (!$this->extend)
+		{
+			return $output;
+		}
+
+		$parent = (new static($this->paths));
+
+		foreach ($this->block as $name => $block)
+		{
+			$parent->setBlock($name, $block);
+		}
+
+		// if ($file == 'html') show($this);die;
+
+		return $parent->render($this->extend, $data);
 	}
 
 	/**
@@ -60,5 +120,125 @@ class PhpRenderer extends AbstractRenderer
 	public function findFile($file, $ext = 'php')
 	{
 		return parent::findFile($file, $ext);
+	}
+
+	/**
+	 * getParent
+	 *
+	 * @return  mixed|null
+	 */
+	protected function parent()
+	{
+		if (!$this->extend)
+		{
+			return null;
+		}
+
+		if (!$this->parent)
+		{
+			$this->parent = new static($this->paths);
+
+			$this->parent->render($this->extend, $this->data);
+		}
+
+		return $this->parent->getBlock($this->currentBlock);
+	}
+
+	/**
+	 * extend
+	 *
+	 * @param string $name
+	 *
+	 * @return  void
+	 *
+	 * @throws \LogicException
+	 */
+	public function extend($name)
+	{
+		if ($this->extend)
+		{
+			throw new \LogicException('Please just extend one file.');
+		}
+
+		$this->extend = $name;
+	}
+
+	/**
+	 * getBlock
+	 *
+	 * @param string $name
+	 *
+	 * @return  mixed
+	 */
+	public function getBlock($name)
+	{
+		return !empty($this->block[$name]) ? $this->block[$name] : null;
+	}
+
+	/**
+	 * setBlock
+	 *
+	 * @param string $name
+	 * @param string $content
+	 *
+	 * @return  PhpRenderer  Return self to support chaining.
+	 */
+	public function setBlock($name, $content = '')
+	{
+		$this->block[$name] = $content;
+
+		return $this;
+	}
+
+	/**
+	 * setBlock
+	 *
+	 * @param  string $name
+	 */
+	public function block($name)
+	{
+		$this->currentBlock = $name;
+
+		$this->getBlockQueue()->push($name);
+
+		// Start an output buffer.
+		ob_start();
+	}
+
+	/**
+	 * endblock
+	 *
+	 * @return  void
+	 */
+	public function endblock()
+	{
+		$name = $this->getBlockQueue()->pop();
+
+		if (!empty($this->block[$name]))
+		{
+			ob_get_clean();
+
+			echo $this->block[$name];
+
+			return;
+		}
+
+		// Get the layout contents.
+		echo $this->block[$name] = ob_get_clean();
+	}
+
+	/**
+	 * getBlockQueue
+	 *
+	 * @return  \SplQueue
+	 */
+	public function getBlockQueue()
+	{
+		if (!$this->blockQueue)
+		{
+			$this->blockQueue = new \SplStack;
+		}
+
+		return $this->blockQueue;
 	}
 }
