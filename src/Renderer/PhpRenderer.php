@@ -35,8 +35,6 @@ class PhpRenderer extends AbstractRenderer
 		if (!$filePath)
 		{
 			throw new \UnexpectedValueException(sprintf('File: %s not found', $filePath));
-
-			return '';
 		}
 
 		// Start an output buffer.

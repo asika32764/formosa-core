@@ -45,6 +45,22 @@ abstract class AbstractRenderer
 	abstract public function render($file, $data = array());
 
 	/**
+	 * Method to escape output.
+	 *
+	 * @param   string  $output  The output to escape.
+	 *
+	 * @return  string  The escaped output.
+	 *
+	 * @see     ViewInterface::escape()
+	 * @since   1.0
+	 */
+	public function escape($output)
+	{
+		// Escape the output.
+		return htmlspecialchars($output, ENT_COMPAT, 'UTF-8');
+	}
+
+	/**
 	 * finFile
 	 *
 	 * @param string $file
@@ -54,6 +70,11 @@ abstract class AbstractRenderer
 	 */
 	public function findFile($file, $ext = '')
 	{
+		if (is_file($file))
+		{
+			return $file;
+		}
+
 		$paths = clone $this->paths;
 
 		$file = str_replace('.', '/', $file);

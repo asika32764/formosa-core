@@ -18,6 +18,13 @@ use Formosa\Renderer\Twig\FormosaExtension;
 class TwigRenderer extends AbstractRenderer
 {
 	/**
+	 * Property loader.
+	 *
+	 * @var  null
+	 */
+	protected $loader = null;
+
+	/**
 	 * render
 	 *
 	 * @param string        $file
@@ -28,15 +35,11 @@ class TwigRenderer extends AbstractRenderer
 	 */
 	public function render($file, $data = array())
 	{
-		$loader = new \Twig_Loader_Filesystem(iterator_to_array($this->getPaths()));
-
-		$loader->addPath(FORMOSA_TEMPLATE . '/_global');
-
 		$config = array(
 			'debug' => FORMOSA_DEBUG
 		);
 
-		$twig = new \Twig_Environment($loader, $config);
+		$twig = new \Twig_Environment($this->getLoader(), $config);
 
 		$twig->addExtension(new FormosaExtension);
 
@@ -46,5 +49,29 @@ class TwigRenderer extends AbstractRenderer
 		}
 
 		return $twig->render($file, $data);
+	}
+
+	/**
+	 * getLoader
+	 *
+	 * @return  null
+	 */
+	public function getLoader()
+	{
+		return $this->loader ? : new \Twig_Loader_Filesystem(iterator_to_array($this->getPaths()));
+	}
+
+	/**
+	 * setLoader
+	 *
+	 * @param   null $loader
+	 *
+	 * @return  TwigRenderer  Return self to support chaining.
+	 */
+	public function setLoader($loader)
+	{
+		$this->loader = $loader;
+
+		return $this;
 	}
 }

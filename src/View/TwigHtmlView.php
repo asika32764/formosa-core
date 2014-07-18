@@ -54,5 +54,18 @@ class TwigHtmlView extends HtmlView
 
 		return $this->renderer->render($this->getLayout() . '.twig', (array) $data);
 	}
+
+	/**
+	 * getPath
+	 *
+	 * @param string $layout
+	 * @param string $ext
+	 *
+	 * @return  mixed
+	 */
+	public function getPath($layout, $ext = 'twig')
+	{
+		return parent::getPath($layout, $ext);
+	}
 }
  
