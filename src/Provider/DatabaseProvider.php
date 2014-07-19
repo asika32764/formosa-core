@@ -56,12 +56,12 @@ class DatabaseProvider implements ServiceProviderInterface
 			'database' => $this->config->get('database.name'),
 		);
 
-		Factory::$db = DatabaseFactory::getDbo($option);
-
 		$container->share(
 			'db',
 			function() use($option)
 			{
+				Factory::$db = DatabaseFactory::getDbo($option);
+
 				return Factory::getDbo();
 			}
 		);

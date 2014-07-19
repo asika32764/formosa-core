@@ -10,10 +10,8 @@ namespace Formosa\Application;
 
 use Formosa\Factory;
 use Formosa\Provider\DatabaseProvider;
-use Formosa\Provider\WhoopsProvider;
 use Joomla\Application\AbstractWebApplication;
 use Joomla\DI\Container;
-use Joomla\Registry\Registry;
 use Joomla\Router\RestRouter;
 
 /**
@@ -76,7 +74,7 @@ class WebApplication extends AbstractWebApplication
 	/**
 	 * loadConfiguration
 	 *
-	 * @param Registry $config
+	 * @param \Joomla\Registry\Registry $config
 	 *
 	 * @return  void
 	 */
@@ -94,8 +92,6 @@ class WebApplication extends AbstractWebApplication
 	 */
 	protected function doExecute()
 	{
-		Factory::getSession()->start();
-
 		$router = $this->getRouter();
 
 		$controller = $router->getController($this->get('uri.route'));
@@ -146,18 +142,26 @@ class WebApplication extends AbstractWebApplication
 		{
 			$router = new RestRouter($this->input);
 
-			$routing = new Registry;
+			$routing = $this->loadRoutingConfiguration();
 
-			$routing->loadFile(FORMOSA_ETC . '/routing.yml', 'yaml');
-
-			$router->setDefaultController($routing->get('_default'))
-				->addMaps($routing->toArray())
+			$router->setDefaultController($routing['_default'])
+				->addMaps($routing)
 				->setMethodInPostRequest(true);
 
 			$this->router = $router;
 		}
 
 		return $this->router;
+	}
+
+	/**
+	 * loadRoutingConfiguration
+	 *
+	 * @return  mixed
+	 */
+	protected function loadRoutingConfiguration()
+	{
+		return json_decode(file_get_contents(FORMOSA_ETC . '/routing.json'), true);
 	}
 
 	/**

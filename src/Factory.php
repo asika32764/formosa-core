@@ -102,6 +102,8 @@ class Factory
 		if (empty(static::$session))
 		{
 			static::$session = new Session;
+
+			static::$session->start();
 		}
 
 		return static::$session;
