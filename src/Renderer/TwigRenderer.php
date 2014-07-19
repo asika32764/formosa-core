@@ -18,9 +18,16 @@ use Formosa\Renderer\Twig\FormosaExtension;
 class TwigRenderer extends AbstractRenderer
 {
 	/**
+	 * Property twig.
+	 *
+	 * @var  \Twig_environment
+	 */
+	protected $twig = null;
+
+	/**
 	 * Property loader.
 	 *
-	 * @var  null
+	 * @var  \Twig_Loader_Filesystem
 	 */
 	protected $loader = null;
 
@@ -51,21 +58,9 @@ class TwigRenderer extends AbstractRenderer
 	 */
 	public function render($file, $data = array())
 	{
-		$twig = new \Twig_Environment($this->getLoader(), $this->config->toArray());
+		$this->extensions = array_merge($this->extensions, (array) $this->config->get('extension', array()));
 
-		$twig->addExtension(new FormosaExtension);
-
-		foreach ($this->extensions as $extension)
-		{
-			$twig->addExtension($extension);
-		}
-
-		if (FORMOSA_DEBUG)
-		{
-			$twig->addExtension(new \Twig_Extension_Debug);
-		}
-
-		return $twig->render($file, $data);
+		return $this->getTwig()->render($file, $data);
 	}
 
 	/**
@@ -75,17 +70,22 @@ class TwigRenderer extends AbstractRenderer
 	 */
 	public function getLoader()
 	{
-		return $this->loader ? : new \Twig_Loader_Filesystem(iterator_to_array($this->getPaths()));
+		if (!$this->loader)
+		{
+			$this->loader = new \Twig_Loader_Filesystem(iterator_to_array($this->getPaths()));
+		}
+
+		return $this->loader;
 	}
 
 	/**
 	 * setLoader
 	 *
-	 * @param   null $loader
+	 * @param   \Twig_Loader_Filesystem $loader
 	 *
 	 * @return  TwigRenderer  Return self to support chaining.
 	 */
-	public function setLoader($loader)
+	public function setLoader(\Twig_Loader_Filesystem $loader)
 	{
 		$this->loader = $loader;
 
@@ -102,5 +102,46 @@ class TwigRenderer extends AbstractRenderer
 	public function addExtension(\Twig_Extension $extension)
 	{
 		$this->extensions[] = $extension;
+	}
+
+	/**
+	 * getTwig
+	 *
+	 * @return  \Twig_environment
+	 */
+	protected function getTwig()
+	{
+		if (!($this->twig instanceof \Twig_Environment))
+		{
+			$this->twig = new \Twig_Environment($this->getLoader(), $this->config->toArray());
+
+			$this->twig->addExtension(new FormosaExtension);
+
+			foreach ($this->extensions as $extension)
+			{
+				$this->twig->addExtension($extension);
+			}
+
+			if (FORMOSA_DEBUG)
+			{
+				$this->twig->addExtension(new \Twig_Extension_Debug);
+			}
+		}
+
+		return $this->twig;
+	}
+
+	/**
+	 * setTwig
+	 *
+	 * @param   \Twig_environment $twig
+	 *
+	 * @return  TwigRenderer  Return self to support chaining.
+	 */
+	public function setTwig(\Twig_environment $twig)
+	{
+		$this->twig = $twig;
+
+		return $this;
 	}
 }

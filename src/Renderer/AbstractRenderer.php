@@ -48,16 +48,6 @@ abstract class AbstractRenderer
 	}
 
 	/**
-	 * render
-	 *
-	 * @param string $file
-	 * @param array  $data
-	 *
-	 * @return  string
-	 */
-	abstract public function render($file, $data = array());
-
-	/**
 	 * Method to escape output.
 	 *
 	 * @param   string  $output  The output to escape.

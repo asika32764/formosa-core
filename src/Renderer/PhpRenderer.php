@@ -97,7 +97,8 @@ class PhpRenderer extends AbstractRenderer
 			return $output;
 		}
 
-		$parent = (new static($this->paths));
+		/** @var $parent phpRenderer */
+		$parent = new static($this->paths);
 
 		foreach ($this->block as $name => $block)
 		{
