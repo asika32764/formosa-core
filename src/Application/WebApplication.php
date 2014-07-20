@@ -11,8 +11,8 @@ namespace Formosa\Application;
 use Formosa\Factory;
 use Formosa\Provider\DatabaseProvider;
 use Joomla\Application\AbstractWebApplication;
-use Joomla\DI\Container;
-use Joomla\Router\RestRouter;
+use Windwalker\DI\Container;
+use Windwalker\Router\RestRouter;
 
 /**
  * Class Application

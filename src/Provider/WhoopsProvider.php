@@ -8,8 +8,8 @@
 
 namespace Formosa\Provider;
 
-use Joomla\DI\Container;
-use Joomla\DI\ServiceProviderInterface;
+use Windwalker\DI\Container;
+use Windwalker\DI\ServiceProviderInterface;
 
 /**
  * Class WhoopsProvider

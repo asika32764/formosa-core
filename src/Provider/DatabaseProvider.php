@@ -8,9 +8,9 @@
 
 namespace Formosa\Provider;
 
-use Joomla\DI\Container;
-use Joomla\DI\ServiceProviderInterface;
 use Formosa\Factory;
+use Windwalker\DI\Container;
+use Windwalker\DI\ServiceProviderInterface;
 
 /**
  * Class WhoopsProvider
@@ -25,8 +25,6 @@ class DatabaseProvider implements ServiceProviderInterface
 	 * @param   Container $container The DI container.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function register(Container $container)
 	{

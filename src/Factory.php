@@ -8,9 +8,9 @@
 
 namespace Formosa;
 
-use Joomla\DI\Container;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Windwalker\Database\DatabaseFactory;
+use Windwalker\DI\Container;
 
 /**
  * Class Factory

@@ -9,7 +9,7 @@
 namespace Formosa\Error;
 
 use Formosa\Application\WebApplication;
-use Formosa\Renderer\PhpRenderer;
+use Windwalker\Renderer\PhpRenderer;
 
 /**
  * Class SimpleErrorHandler
