@@ -9,13 +9,13 @@
 namespace Formosa\View;
 
 use Formosa\Model\DatabaseModel;
-use Formosa\Renderer\AbstractRenderer;
-use Formosa\Renderer\PhpRenderer;
 use Formosa\Utilities\Queue\Priority;
-use Joomla\Filesystem\Path;
-use Joomla\Model\ModelInterface;
-use Joomla\View\AbstractHtmlView;
+use Formosa\View\Helper\ViewHelper;
 use Windwalker\Data\Data;
+use Windwalker\Model\ModelInterface;
+use Windwalker\Renderer\PhpRenderer;
+use Windwalker\Renderer\RendererInterface;
+use Windwalker\View\AbstractHtmlView;
 
 /**
  * Class HtmlView
@@ -39,28 +39,36 @@ class HtmlView extends AbstractHtmlView
 	protected $name = null;
 
 	/**
+	 * Property layout.
+	 *
+	 * @var  string
+	 */
+	protected $layout = 'default';
+
+	/**
 	 * Property renderer.
 	 *
-	 * @var  \Formosa\Renderer\AbstractRenderer
+	 * @var  RendererInterface
 	 */
-	protected $renderer;
+	protected $renderer = null;
 
 	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param   ModelInterface     $model    The model object.
-	 * @param   \SplPriorityQueue  $paths    The paths queue.
-	 * @param   AbstractRenderer   $renderer The renderer engine.
+	 * @param   array             $data     The data array.
+	 * @param   RendererInterface $renderer The renderer engine.
+	 *
+	 * @internal param \Windwalker\Model\ModelInterface $model The model object.
 	 */
-	public function __construct(ModelInterface $model = null, \SplPriorityQueue $paths = null, AbstractRenderer $renderer = null)
+	public function __construct($data = array(), RendererInterface $renderer = null)
 	{
-		$model = $model ? : new DatabaseModel;
-
 		$this->renderer = $renderer ? : new PhpRenderer;
 
-		parent::__construct($model, $paths);
+		parent::__construct($data);
 
-		$this->paths->insert(FORMOSA_TEMPLATE . '/_global', Priority::NORMAL);
+		$this->renderer->addPath(FORMOSA_TEMPLATE . '/_global', Priority::NORMAL);
+
+		$this->data = new Data($this->data);
 	}
 
 	/**
@@ -107,12 +115,7 @@ class HtmlView extends AbstractHtmlView
 
 		$this->prepareData($data);
 
-		$data->view = new Data;
-
-		$data->view->name = $this->getName();
-		$data->view->layout = $this->getLayout();
-
-		$this->renderer->setPaths($this->paths);
+		$this->prepareGlobals($data);
 
 		return $this->renderer->render($this->getLayout(), (array) $data);
 	}
@@ -158,32 +161,20 @@ class HtmlView extends AbstractHtmlView
 	}
 
 	/**
-	 * getPath
+	 * prepareGlobals
 	 *
-	 * @param string $layout
-	 * @param string $ext
+	 * @param \Windwalker\Data\Data $data
 	 *
-	 * @return  mixed
+	 * @return  void
 	 */
-	public function getPath($layout, $ext = 'php')
+	protected function prepareGlobals($data)
 	{
-		return parent::getPath($layout, $ext);
-	}
+		$data->view = new Data;
 
-	/**
-	 * Method to load the paths queue.
-	 *
-	 * @return  \SplPriorityQueue  The paths queue.
-	 *
-	 * @since   1.0
-	 */
-	protected function loadPaths()
-	{
-		$paths = parent::loadPaths();
+		$data->view->name = $this->getName();
+		$data->view->layout = $this->getLayout();
 
-		$paths->insert(FORMOSA_TEMPLATE . '/' . $this->getName(), Priority::NORMAL);
-
-		return $paths;
+		$data->bind(ViewHelper::getGlobalVariables());
 	}
 }
  

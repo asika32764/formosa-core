@@ -11,7 +11,6 @@ namespace Formosa\Provider;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Formosa\Factory;
-use Windwalker\Database\DatabaseFactory;
 
 /**
  * Class WhoopsProvider
@@ -20,23 +19,6 @@ use Windwalker\Database\DatabaseFactory;
  */
 class DatabaseProvider implements ServiceProviderInterface
 {
-	/**
-	 * Property config.
-	 *
-	 * @var \Joomla\Registry\Registry
-	 */
-	private $config;
-
-	/**
-	 * Class init.
-	 *
-	 * @param $config
-	 */
-	public function __construct($config)
-	{
-		$this->config = $config;
-	}
-
 	/**
 	 * Registers the service provider with a DI container.
 	 *
@@ -48,20 +30,10 @@ class DatabaseProvider implements ServiceProviderInterface
 	 */
 	public function register(Container $container)
 	{
-		$option = array(
-			'driver' => $this->config->get('database.driver'),
-			'host' => $this->config->get('database.host'),
-			'user' => $this->config->get('database.user'),
-			'password' => $this->config->get('database.password'),
-			'database' => $this->config->get('database.name'),
-		);
-
 		$container->share(
 			'db',
-			function() use($option)
+			function()
 			{
-				Factory::$db = DatabaseFactory::getDbo($option);
-
 				return Factory::getDbo();
 			}
 		);

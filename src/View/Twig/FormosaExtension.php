@@ -8,8 +8,7 @@
 
 namespace Formosa\View\Twig;
 
-use Formosa\Factory;
-use Formosa\Helper\Set\HelperSet;
+use Formosa\View\Helper\ViewHelper;
 
 /**
  * Class FormosaExtension
@@ -35,16 +34,7 @@ class FormosaExtension extends \Twig_Extension
 	 */
 	public function getGlobals()
 	{
-		$app = Factory::getApplication();
-
-		return array(
-			'uri' => $app->get('uri'),
-			'app' => $app,
-			'container' => Factory::getContainer(),
-			'helper' => new HelperSet,
-			'flash' => Factory::getSession()->getFlashBag()->all(),
-			'datetime' => new \DateTime('now', new \DateTimeZone($app->get('system.timezone', 'UTC')))
-		);
+		return ViewHelper::getGlobalVariables();
 	}
 
 	/**

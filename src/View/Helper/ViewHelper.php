@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Formosa\Renderer\Helper;
+namespace Formosa\View\Helper;
 
 use Formosa\Factory;
 use Formosa\Helper\Set\HelperSet;
@@ -17,7 +17,7 @@ use Joomla\Date\Date;
  *
  * @since 1.0
  */
-class RendererHelper
+class ViewHelper
 {
 	/**
 	 * getGlobalVariables

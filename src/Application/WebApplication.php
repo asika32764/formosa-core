@@ -68,7 +68,7 @@ class WebApplication extends AbstractWebApplication
 	 */
 	protected function registerProviders(Container $container)
 	{
-		$container->registerServiceProvider(new DatabaseProvider($this->config));
+		$container->registerServiceProvider(new DatabaseProvider);
 	}
 
 	/**
@@ -92,11 +92,7 @@ class WebApplication extends AbstractWebApplication
 	 */
 	protected function doExecute()
 	{
-		$router = $this->getRouter();
-
-		$controller = $router->getController($this->get('uri.route'));
-
-		$content = $controller->execute();
+		$content = $this->getController()->execute();
 
 		$this->setBody($content);
 	}
@@ -152,6 +148,24 @@ class WebApplication extends AbstractWebApplication
 		}
 
 		return $this->router;
+	}
+
+	/**
+	 * getController
+	 *
+	 * @param string $route
+	 *
+	 * @return  mixed
+	 */
+	public function getController($route = null)
+	{
+		$route = $route ? : $this->get('uri.route');
+
+		$router = $this->getRouter();
+
+		$class = $router->getController($route);
+
+		return new $class($this->input, $this);
 	}
 
 	/**

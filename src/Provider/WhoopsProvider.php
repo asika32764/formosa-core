@@ -50,11 +50,14 @@ class WhoopsProvider implements ServiceProviderInterface
 		{
 			$whoops = new \Whoops\Run;
 
-			$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+			$handler = new \Whoops\Handler\PrettyPageHandler;
+
+			$whoops->pushHandler($handler);
 
 			$whoops->register();
 
 			$container->share('whoops', $whoops);
+			$container->share('whoops.handler', $handler);
 		}
 	}
 }

@@ -10,6 +10,7 @@ namespace Formosa;
 
 use Joomla\DI\Container;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Windwalker\Database\DatabaseFactory;
 
 /**
  * Class Factory
@@ -70,7 +71,17 @@ class Factory
 	{
 		if (empty(static::$db))
 		{
-			static::$db = static::getContainer()->get('db');
+			$app = static::getApplication();
+
+			$option = array(
+				'driver' => $app->get('database.driver'),
+				'host' => $app->get('database.host'),
+				'user' => $app->get('database.user'),
+				'password' => $app->get('database.password'),
+				'database' => $app->get('database.name'),
+			);
+			
+			static::$db = DatabaseFactory::getDbo($option);
 		}
 
 		return static::$db;

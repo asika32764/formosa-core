@@ -42,9 +42,9 @@ class JsonView extends HtmlView
 	/**
 	 * setData
 	 *
-	 * @param   \Windwalker\Data\Data $data
+	 * @param   \Joomla\Registry\Registry $data
 	 *
-	 * @return  TwigHtmlView  Return self to support chaining.
+	 * @return  $this  Return self to support chaining.
 	 */
 	public function setData($data)
 	{
@@ -56,7 +56,7 @@ class JsonView extends HtmlView
 	/**
 	 * prepareData
 	 *
-	 * @param \Windwalker\Data\Data $data
+	 * @param \Joomla\Registry\Registry $data
 	 *
 	 * @return  void
 	 */
