@@ -130,7 +130,7 @@ class WebApplication extends AbstractWebApplication
 	/**
 	 * getRouter
 	 *
-	 * @return  \Joomla\Router\Router
+	 * @return  \Windwalker\Router\Router
 	 */
 	public function getRouter()
 	{
@@ -140,7 +140,9 @@ class WebApplication extends AbstractWebApplication
 
 			$routing = $this->loadRoutingConfiguration();
 
-			$router->setDefaultController($routing['_default'])
+			$router->setMethod($this->input->getMethod())
+				->setCustomMethod($this->input->get->get('_method'))
+				->setDefaultController($routing['_default'])
 				->addMaps($routing)
 				->setMethodInPostRequest(true);
 
@@ -164,6 +166,16 @@ class WebApplication extends AbstractWebApplication
 		$router = $this->getRouter();
 
 		$class = $router->getController($route);
+
+		$requests = $router->getRequests();
+
+		foreach ($requests as $name => $value)
+		{
+			$this->input->def($name, $value);
+
+			// Don't forget to do an explicit set on the GET superglobal.
+			$this->input->get->def($name, $value);
+		}
 
 		return new $class($this->input, $this);
 	}
