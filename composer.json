@@ -6,10 +6,7 @@
 	"minimum-stability": "beta",
 	"require" : {
 		"windwalker/framework" : "dev-staging",
-		"joomla/application" : "1.*",
 		"joomla/event" : "1.*",
-		"joomla/date" : "1.*",
-		"joomla/uri" : "1.*",
 		"twig/twig" : "1.*",
 		"symfony/yaml" : "2.*",
 		"symfony/http-foundation" : "2.*"
