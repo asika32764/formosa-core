@@ -8,9 +8,12 @@
 
 namespace Formosa;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+// use Symfony\Component\HttpFoundation\Session\Session;
 use Windwalker\Database\DatabaseFactory;
 use Windwalker\DI\Container;
+use Windwalker\Session\Bag\AutoExpiredFlashBag;
+use Windwalker\Session\Handler\PhpHandler;
+use Windwalker\Session\Session;
 
 /**
  * Class Factory
@@ -43,7 +46,7 @@ class Factory
 	/**
 	 * Property session.
 	 *
-	 * @var \Symfony\Component\HttpFoundation\Session\Session
+	 * @var \Windwalker\Session\Session
 	 */
 	public static $session;
 
@@ -112,7 +115,9 @@ class Factory
 	{
 		if (empty(static::$session))
 		{
-			static::$session = new Session;
+			static::$session = new Session(new PhpHandler);
+
+			static::$session->setCookie($_COOKIE);
 
 			static::$session->start();
 		}

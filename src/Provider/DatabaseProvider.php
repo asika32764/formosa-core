@@ -9,6 +9,8 @@
 namespace Formosa\Provider;
 
 use Formosa\Factory;
+use Windwalker\DataMapper\Adapter\DatabaseAdapter;
+use Windwalker\DataMapper\Adapter\WindwalkerAdapter;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 
@@ -28,6 +30,13 @@ class DatabaseProvider implements ServiceProviderInterface
 	 */
 	public function register(Container $container)
 	{
+		DatabaseAdapter::setInstance(
+			function()
+			{
+				return new WindwalkerAdapter(Factory::getDbo());
+			}
+		);
+
 		$container->share(
 			'db',
 			function()

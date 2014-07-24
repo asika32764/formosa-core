@@ -12,6 +12,7 @@ use Formosa\Factory;
 use Formosa\Provider\DatabaseProvider;
 use Joomla\Application\AbstractWebApplication;
 use Windwalker\DI\Container;
+use Windwalker\Input\Input;
 use Windwalker\Router\RestRouter;
 
 /**
@@ -24,7 +25,7 @@ class WebApplication extends AbstractWebApplication
 	/**
 	 * Property router.
 	 *
-	 * @var  \Joomla\Router\Router
+	 * @var  \Windwalker\Router\Router
 	 */
 	protected $router = null;
 
@@ -108,6 +109,7 @@ class WebApplication extends AbstractWebApplication
 	{
 		// @event onBeforeExecute
 
+
 		// Perform application routines.
 		$this->doExecute();
 
@@ -136,15 +138,14 @@ class WebApplication extends AbstractWebApplication
 	{
 		if (!$this->router)
 		{
-			$router = new RestRouter($this->input);
+			$router = new RestRouter;
 
 			$routing = $this->loadRoutingConfiguration();
 
 			$router->setMethod($this->input->getMethod())
 				->setCustomMethod($this->input->get->get('_method'))
-				->setDefaultController($routing['_default'])
 				->addMaps($routing)
-				->setMethodInPostRequest(true);
+				->allowCustomMethod(true);
 
 			$this->router = $router;
 		}
@@ -165,7 +166,7 @@ class WebApplication extends AbstractWebApplication
 
 		$router = $this->getRouter();
 
-		$class = $router->getController($route);
+		$class = $router->match($route);
 
 		$requests = $router->getRequests();
 
@@ -193,7 +194,7 @@ class WebApplication extends AbstractWebApplication
 	/**
 	 * getContainer
 	 *
-	 * @return  \Joomla\DI\Container
+	 * @return  \Windwalker\DI\Container
 	 */
 	public function getContainer()
 	{
@@ -203,7 +204,7 @@ class WebApplication extends AbstractWebApplication
 	/**
 	 * setContainer
 	 *
-	 * @param   \Joomla\DI\Container $container
+	 * @param   \Windwalker\DI\Container $container
 	 *
 	 * @return  Application  Return self to support chaining.
 	 */
@@ -226,7 +227,8 @@ class WebApplication extends AbstractWebApplication
 	{
 		$session = Factory::getSession();
 
-		$session->getFlashBag()->add($type, $message);
+		$session->addFlash($message, $type);
+		$session->addFlash($message, $type);
 
 		return $this;
 	}
