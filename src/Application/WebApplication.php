@@ -10,9 +10,8 @@ namespace Formosa\Application;
 
 use Formosa\Factory;
 use Formosa\Provider\DatabaseProvider;
-use Joomla\Application\AbstractWebApplication;
+use Windwalker\Application\AbstractWebApplication;
 use Windwalker\DI\Container;
-use Windwalker\Input\Input;
 use Windwalker\Router\RestRouter;
 
 /**
