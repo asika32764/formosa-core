@@ -5,7 +5,7 @@
 	"license": "GNU Lesser General Public License",
 	"minimum-stability": "beta",
 	"require" : {
-		"windwalker/framework" : "2.0.*",
+		"windwalker/framework" : "dev-staging",
 		"joomla/application" : "1.*",
 		"joomla/event" : "1.*",
 		"joomla/date" : "1.*",
