@@ -5,7 +5,7 @@
 	"license": "GNU Lesser General Public License",
 	"minimum-stability": "beta",
 	"require" : {
-		"windwalker/framework" : "dev-staging",
+		"windwalker/framework" : "dev-dev-2.0",
 		"joomla/event" : "1.*",
 		"twig/twig" : "1.*",
 		"symfony/yaml" : "2.*",
