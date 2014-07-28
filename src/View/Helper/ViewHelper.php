@@ -10,7 +10,7 @@ namespace Formosa\View\Helper;
 
 use Formosa\Factory;
 use Formosa\Helper\Set\HelperSet;
-use Joomla\Date\Date;
+use Windwalker\Date\DateTime;
 
 /**
  * Class RendererHelper
@@ -34,7 +34,7 @@ class ViewHelper
 			'container' => Factory::getContainer(),
 			'helper' => new HelperSet,
 			'flash' => Factory::getSession()->getAll(),
-			'datetime' => new Date('now', new \DateTimeZone($app->get('system.timezone', 'UTC')))
+			'datetime' => new DateTime('now', new \DateTimeZone($app->get('system.timezone', 'UTC')))
 		);
 	}
 }
