@@ -1,6 +1,6 @@
 <?php
 /**
- * Part of auth project. 
+ * Part of Windwalker project. 
  *
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -8,15 +8,18 @@
 
 namespace Formosa\Provider;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 
 /**
- * Class WhoopsProvider
+ * Class LoggerProvider
  *
  * @since 1.0
  */
-class WhoopsProvider implements ServiceProviderInterface
+class LoggerProvider implements ServiceProviderInterface
 {
 	/**
 	 * Property config.
@@ -41,24 +44,17 @@ class WhoopsProvider implements ServiceProviderInterface
 	 * @param   Container $container The DI container.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function register(Container $container)
 	{
-		if ($this->config->get('system.debug'))
-		{
-			$whoops = new \Whoops\Run;
+		$level = $this->config->get('system.debug') ? Logger::DEBUG : Logger::WARNING;
 
-			$handler = new \Whoops\Handler\PrettyPageHandler;
+		$log = new Logger('sql');
+		$stream = new StreamHandler(FORMOSA_ETC . '/logs/debug.log', $level);
+		$log->pushHandler($stream);
+		$log->pushProcessor(new PsrLogMessageProcessor);
 
-			$whoops->pushHandler($handler);
-
-			$whoops->register();
-
-			$container->share('whoops', $whoops);
-			$container->share('whoops.handler', $handler);
-		}
+		$container->share('logger', $log);
 	}
 }
  
