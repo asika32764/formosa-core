@@ -5,20 +5,15 @@
 	"license": "GNU Lesser General Public License",
 	"minimum-stability": "beta",
 	"require" : {
-		"windwalker/framework" : "dev-dev-2.0",
-		"joomla/event" : "1.*",
+		"windwalker/framework" : "dev-staging",
 		"twig/twig" : "1.*",
-		"symfony/yaml" : "2.*",
-		"symfony/http-foundation" : "2.*"
+		"symfony/yaml" : "2.*"
 	},
 	"require-dev" : {
 	},
 	"autoload" : {
 		"psr-4" : {
 			"Formosa\\" : "src/"
-		},
-		"files": [
-			"src/PHP/methods.php"
-		]
+		}
 	}
 }
