@@ -8,11 +8,9 @@
 
 namespace Formosa\View;
 
-use Formosa\Model\DatabaseModel;
 use Formosa\Utilities\Queue\Priority;
 use Formosa\View\Helper\ViewHelper;
 use Windwalker\Data\Data;
-use Windwalker\Model\ModelInterface;
 use Windwalker\Renderer\PhpRenderer;
 use Windwalker\Renderer\RendererInterface;
 use Windwalker\View\AbstractHtmlView;

@@ -22,15 +22,15 @@ class MigrationHelper
 	 *
 	 * @param AbstractMigration $migration
 	 *
-	 * @return  \Joomla\Database\DatabaseQuery
+	 * @return
 	 */
 	public static function getQuery(AbstractMigration $migration)
 	{
 		$driver = static::getDriver($migration);
 
-		$db = \Joomla\Database\DatabaseFactory::getInstance();
+		$class = 'Windwalker\\Query\\' . ucfirst($driver) . '\\' . ucfirst($driver) . 'Query';
 
-		return $db->getQuery($driver);
+		return new $class(static::getConnector($migration));
 	}
 
 	/**

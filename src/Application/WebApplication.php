@@ -92,9 +92,11 @@ class WebApplication extends AbstractWebApplication
 	 */
 	protected function doExecute()
 	{
-		$content = $this->getController()->execute();
+		$controller = $this->getController();
 
-		$this->setBody($content);
+		$controller = new $controller($this->input, $this);
+
+		$this->setBody($controller->execute());
 	}
 
 	/**
@@ -177,7 +179,7 @@ class WebApplication extends AbstractWebApplication
 			$this->input->get->def($name, $value);
 		}
 
-		return new $class($this->input, $this);
+		return $class;
 	}
 
 	/**

@@ -32,7 +32,7 @@ class Factory
 	/**
 	 * Property db.
 	 *
-	 * @var  \Joomla\Database\DatabaseDriver
+	 * @var  \Windwalker\Database\Driver\DatabaseDriver
 	 */
 	public static $db = null;
 
@@ -68,7 +68,7 @@ class Factory
 	/**
 	 * getDbo
 	 *
-	 * @return  \Joomla\Database\DatabaseDriver
+	 * @return  \Windwalker\Database\Driver\DatabaseDriver
 	 */
 	public static function getDbo()
 	{
