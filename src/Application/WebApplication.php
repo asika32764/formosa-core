@@ -10,6 +10,7 @@ namespace Formosa\Application;
 
 use Formosa\Factory;
 use Formosa\Provider\DatabaseProvider;
+use Symfony\Component\Yaml\Yaml;
 use Windwalker\Application\AbstractWebApplication;
 use Windwalker\DI\Container;
 use Windwalker\Router\RestRouter;
@@ -100,37 +101,6 @@ class WebApplication extends AbstractWebApplication
 	}
 
 	/**
-	 * Execute the application.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function execute()
-	{
-		// @event onBeforeExecute
-
-
-		// Perform application routines.
-		$this->doExecute();
-
-		// @event onAfterExecute
-
-		// If gzip compression is enabled in configuration and the server is compliant, compress the output.
-		if ($this->get('gzip') && !ini_get('zlib.output_compression') && (ini_get('output_handler') != 'ob_gzhandler'))
-		{
-			$this->compress();
-		}
-
-		// @event onBeforeRespond
-
-		// Send the application response.
-		$this->respond();
-
-		// @event onAfterRespond
-	}
-
-	/**
 	 * getRouter
 	 *
 	 * @return  \Windwalker\Router\Router
@@ -189,7 +159,7 @@ class WebApplication extends AbstractWebApplication
 	 */
 	protected function loadRoutingConfiguration()
 	{
-		return json_decode(file_get_contents(FORMOSA_ETC . '/routing.json'), true);
+		return Yaml::parse(file_get_contents(FORMOSA_ETC . '/routing.yml'));
 	}
 
 	/**
