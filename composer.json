@@ -3,7 +3,7 @@
 	"description": "A light framework named by Taiwan.",
 	"homepage": "https://github.com/asika32764/formosa",
 	"license": "GNU Lesser General Public License",
-	"minimum-stability": "beta",
+	"minimum-stability": "dev",
 	"require" : {
 		"windwalker/framework" : "dev-staging",
 		"twig/twig" : "1.*",
