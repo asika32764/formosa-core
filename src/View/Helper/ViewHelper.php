@@ -33,7 +33,7 @@ class ViewHelper
 			'app' => $app,
 			'container' => Factory::getContainer(),
 			'helper' => new HelperSet,
-			'flash' => Factory::getSession()->getAll(),
+			'flash' => Factory::getSession()->getFlashBag()->takeAll(),
 			'datetime' => new DateTime('now', new \DateTimeZone($app->get('system.timezone', 'UTC')))
 		);
 	}

@@ -199,7 +199,6 @@ class WebApplication extends AbstractWebApplication
 		$session = Factory::getSession();
 
 		$session->addFlash($message, $type);
-		$session->addFlash($message, $type);
 
 		return $this;
 	}
